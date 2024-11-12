@@ -8,7 +8,7 @@ import numpy as np
 
 # Función para cargar el archivo CSV desde GitHub
 def load_data():
-    url = "https://raw.githubusercontent.com/<your_github_username>/<your_repository>/main/cuerpo_documentos_p2_gr_2.csv"
+    url = "https://github.com/Stevee29/Repositorio_IMA_357_2024_2_Grupo3/blob/main/cuerpo_documentos_p2_gr_3.csv"
     response = requests.get(url)
     data = StringIO(response.text)
     df = pd.read_csv(data)
@@ -16,30 +16,30 @@ def load_data():
 
 # Función para encontrar el documento con mayor frecuencia de una palabra
 def find_max_frequency_document(df, word):
-    df['word_count'] = df['body'].apply(lambda x: x.lower().split().count(word.lower()))
+    df['word_count'] = df['Cuerpo'].apply(lambda x: x.lower().split().count(word.lower()))
     max_freq_doc = df.loc[df['word_count'].idxmax()]
-    return max_freq_doc['title'], max_freq_doc['word_count']
+    return max_freq_doc['Titular'], max_freq_doc['word_count']
 
 # Función para encontrar el documento más similar usando similitud coseno
 def find_most_similar_document(df, sentence):
-    vectorizer = TfidfVectorizer().fit_transform(df['body'].values)
+    vectorizer = TfidfVectorizer().fit_transform(df['Cuerpo'].values)
     vectors = vectorizer.transform([sentence])
     cosine_similarities = cosine_similarity(vectors, vectorizer).flatten()
     most_similar_doc_idx = cosine_similarities.argmax()
-    return df.loc[most_similar_doc_idx]['title']
+    return df.loc[most_similar_doc_idx]['Titular']
 
 # Función para encontrar el documento con mayor suma de frecuencias de tokens de la oración
 def find_max_sum_frequency_document(df, sentence):
     tokens = sentence.lower().split()
-    df['sum_token_count'] = df['body'].apply(lambda x: sum([x.lower().split().count(token) for token in tokens]))
+    df['sum_token_count'] = df['Cuerpo'].apply(lambda x: sum([x.lower().split().count(token) for token in tokens]))
     max_sum_freq_doc = df.loc[df['sum_token_count'].idxmax()]
-    return max_sum_freq_doc['title'], max_sum_freq_doc['sum_token_count']
+    return max_sum_freq_doc['Titular'], max_sum_freq_doc['sum_token_count']
 
 # Cargar los datos
 df = load_data()
 
 # Mostrar el contenido del archivo en una tabla
-st.title('Análisis de Documentos')
+st.title('ITEM 3 ')
 st.subheader('Contenido del archivo:')
 st.dataframe(df)
 
