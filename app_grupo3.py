@@ -6,21 +6,24 @@ from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.metrics.pairwise import cosine_similarity
 
 # Función para cargar el archivo CSV desde GitHub
-# @st.cache
+@st.cache
 def load_data():
     url = "https://raw.githubusercontent.com/<your_github_username>/<your_repository>/main/cuerpo_documentos_p2_gr_2.csv"
     response = requests.get(url)
     data = StringIO(response.text)
     try:
-        df = pd.read_csv(data, error_bad_lines=False, warn_bad_lines=True)
+        df = pd.read_csv(data)
         return df
     except pd.errors.ParserError as e:
         st.error(f"Error al leer el archivo CSV: {e}")
         return None
+    except Exception as e:
+        st.error(f"Un error inesperado ocurrió al leer el archivo CSV: {e}")
+        return None
 
 # Función para encontrar el documento con mayor frecuencia de una palabra
 def find_max_frequency_document(df, word):
-    df['word_count'] = df['Cuerpo'].apply(lambda x: x.lower().split().count(word.lower()))
+    df['word_count'] = df['Cuerpo'].apply(lambda x: str(x).lower().split().count(word.lower()))
     max_freq_doc = df.loc[df['word_count'].idxmax()]
     return max_freq_doc['Titular'], max_freq_doc['word_count']
 
@@ -35,7 +38,7 @@ def find_most_similar_document(df, sentence):
 # Función para encontrar el documento con mayor suma de frecuencias de tokens de la oración
 def find_max_sum_frequency_document(df, sentence):
     tokens = sentence.lower().split()
-    df['sum_token_count'] = df['Cuerpo'].apply(lambda x: sum([x.lower().split().count(token) for token in tokens]))
+    df['sum_token_count'] = df['Cuerpo'].apply(lambda x: sum([str(x).lower().split().count(token) for token in tokens]))
     max_sum_freq_doc = df.loc[df['sum_token_count'].idxmax()]
     return max_sum_freq_doc['Titular'], max_sum_freq_doc['sum_token_count']
 
