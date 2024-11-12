@@ -6,9 +6,9 @@ from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.metrics.pairwise import cosine_similarity
 
 # Función para cargar el archivo CSV desde GitHub
-@st.cache
+# @st.cache
 def load_data():
-    url = "https://github.com/Stevee29/Repositorio_IMA_357_2024_2_Grupo3/blob/main/cuerpo_documentos_p2_gr_3.csv"
+    url = "https://raw.githubusercontent.com/<your_github_username>/<your_repository>/main/cuerpo_documentos_p2_gr_2.csv"
     response = requests.get(url)
     data = StringIO(response.text)
     try:
@@ -43,10 +43,13 @@ def find_max_sum_frequency_document(df, sentence):
 df = load_data()
 
 if df is not None:
-    # Mostrar el contenido del archivo en una tabla
-    st.title('Análisis de Documentos')
-    st.subheader('Contenido del archivo:')
+    # Verificar los datos cargados
     st.dataframe(df)
+    st.write(df.columns)  # Para verificar los nombres de las columnas
+
+    # Convertir la columna 'Cuerpo' a str y llenar valores nulos
+    df['Cuerpo'] = df['Cuerpo'].astype(str)
+    df['Cuerpo'].fillna('', inplace=True)
 
     # Inputs de texto
     word_input = st.text_input('Input de palabra')
