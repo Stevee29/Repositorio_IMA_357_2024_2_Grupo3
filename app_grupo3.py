@@ -7,13 +7,21 @@ from sklearn.metrics.pairwise import cosine_similarity
 import numpy as np
 
 # Función para cargar el archivo CSV desde GitHub
+@st.cache
 def load_data():
     url = "https://github.com/Stevee29/Repositorio_IMA_357_2024_2_Grupo3/blob/main/cuerpo_documentos_p2_gr_3.csv"
     response = requests.get(url)
+    if response.status_code != 200:
+        st.error("Error al acceder al archivo en GitHub")
+        return None
     data = StringIO(response.text)
-    df = pd.read_csv(data)
-    return df
-
+    try:
+        df = pd.read_csv(data)
+        return df
+    except pd.errors.ParserError as e:
+        st.error(f"Error al leer el archivo CSV: {e}")
+        return None
+        
 # Función para encontrar el documento con mayor frecuencia de una palabra
 def find_max_frequency_document(df, word):
     df['word_count'] = df['Cuerpo'].apply(lambda x: x.lower().split().count(word.lower()))
