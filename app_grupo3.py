@@ -8,7 +8,7 @@ from sklearn.metrics.pairwise import cosine_similarity
 # Función para cargar el archivo CSV desde GitHub
 @st.cache
 def load_data():
-    url = "https://raw.githubusercontent.com/<your_github_username>/<your_repository>/main/cuerpo_documentos_p2_gr_2.csv"
+    url = "https://github.com/Stevee29/Repositorio_IMA_357_2024_2_Grupo3/blob/main/cuerpo_documentos_p2_gr_3.csv"
     response = requests.get(url)
     data = StringIO(response.text)
     try:
